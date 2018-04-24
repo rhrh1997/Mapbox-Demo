@@ -34,7 +34,8 @@
               // GeoJSON Data source used in vector tiles, documented at
               // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
               'type': 'geojson',
-              'data': 'https://gist.githubusercontent.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d/raw/8c384b4e418670a35dc054ab7da6638ff4073a69/indoor_3D_map_example.geojson'
+              'data': 'https://api.mapbox.com/datasets/v1/krieg2/cjgds8ova06malmmmcj0gk9xr/features?access_token='+mapboxgl.accessToken
+              // Data can be loaded from mapbox account or any other URL.
           },
           'paint': {
               // See the Mapbox Style Specification for details on data expressions.
