@@ -7,6 +7,10 @@
   <style>
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
+        .mapboxgl-popup {
+          max-width: 400px;
+          font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -23,20 +27,42 @@
         pitch: 40,
         bearing: 20
       });
+      // Create a popup, but don't add it to the map yet.
+      var markerHeight = 40, markerRadius = 10, linearOffset = 25;
+      var popupOffsets = {
+       'top': [0, 0],
+       'top-left': [0,0],
+       'top-right': [0,0],
+       'bottom': [0, -markerHeight*1.5],
+       'bottom-left': [linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+       'bottom-right': [-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+       'left': [markerRadius, (markerHeight - markerRadius) * -1],
+       'right': [-markerRadius, (markerHeight - markerRadius) * -1]
+      };
+      var popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: popupOffsets
+      });
       // Add zoom and rotation controls to the map.
       map.addControl(new mapboxgl.NavigationControl());
       map.on('load', function(){
+
+        // Data can be loaded from mapbox account or any other URL.
+        map.addSource('rooms', {
+          'type': 'geojson',
+          'data': 'https://api.mapbox.com/datasets/v1/krieg2/cjgds8ova06malmmmcj0gk9xr/features?access_token='+mapboxgl.accessToken
+        });
+
         // Add fill extrusion layer.
         map.addLayer({
           'id': 'room-extrusion',
           'type': 'fill-extrusion',
-          'source': {
+           'source': 'rooms',
+
               // GeoJSON Data source used in vector tiles, documented at
               // https://gist.github.com/ryanbaumann/a7d970386ce59d11c16278b90dde094d
-              'type': 'geojson',
-              'data': 'https://api.mapbox.com/datasets/v1/krieg2/cjgds8ova06malmmmcj0gk9xr/features?access_token='+mapboxgl.accessToken
-              // Data can be loaded from mapbox account or any other URL.
-          },
+
           'paint': {
               // See the Mapbox Style Specification for details on data expressions.
               // https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions
@@ -54,6 +80,41 @@
               'fill-extrusion-opacity': 0.5
           }
         });
+
+        // Add hover layer.
+        map.addLayer({
+          'id': 'fills-hover',
+          'type': 'fill',
+          'source': 'rooms',
+          'layout': {},
+          'paint': {
+              'fill-color': '#627BC1',
+              'fill-opacity': 0.5
+          },
+          'filter': ['==', 'name', '']
+        });
+
+        // When the user moves their mouse over the fill layer, we'll update the filter in
+        // the fills-hover layer to only show the matching state, thus making a hover effect.
+        map.on('mousemove', 'room-extrusion', function(e) {
+
+            var name = e.features[0].properties.name;
+            map.setFilter('fills-hover', ['==', 'name', name]);
+
+            map.getCanvas().style.cursor = 'pointer';
+            popup.setLngLat(e.lngLat)
+                .setHTML(name)
+                .addTo(map);
+
+        });
+
+        // Reset the state-fills-hover layer's filter when the mouse leaves the layer.
+        map.on('mouseleave', 'room-extrusion', function() {
+            map.setFilter('fills-hover', ['==', 'name', '']);
+            map.getCanvas().style.cursor = '';
+            popup.remove();
+        });
+
       });
     </script>
 </body>
