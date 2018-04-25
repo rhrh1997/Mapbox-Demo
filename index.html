@@ -123,7 +123,7 @@
 
       mapboxgl.accessToken = 'pk.eyJ1Ijoia3JpZWcyIiwiYSI6ImNqZ2RueHR5eDA3bmgzMmt0YWJpbmVhb28ifQ.Lh9cwp2VkDjPL638TArXuQ';
       
-      var map = new mapboxgl.Map({
+      var map2 = new mapboxgl.Map({
         container: 'map2',
         style: 'mapbox://styles/mapbox/streets-v10',
         center: [-75.789, 41.874],
@@ -131,11 +131,11 @@
       });
 
       // Add zoom and rotation controls to the map.
-      map.addControl(new mapboxgl.NavigationControl());
-      map.on('load', function(){
+      map2.addControl(new mapboxgl.NavigationControl());
+      map2.on('load', function(){
 
         // Data can be loaded from mapbox account or any other URL.
-        map.addSource('overlay', {
+        map2.addSource('overlay', {
           'type': 'image',
           'url': '/Mapbox-Demo/assets/images/radar.gif',
           'coordinates': [
