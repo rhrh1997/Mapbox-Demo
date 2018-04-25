@@ -143,7 +143,19 @@
                 [-71.516, 46.437],
                 [-71.516, 37.936],
                 [-80.425, 37.936]
-            ]
+            ],
+
+        });
+
+        // Add image overlay layer.
+        map.addLayer({
+          'id': 'overlay',
+          'type': 'raster',
+          'source': 'overlay',
+          'paint': {
+              'fill-color': '#627BC1',
+              'raster-opacity': 0.75
+          }
         });
 
       });
