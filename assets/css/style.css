@@ -1,0 +1,34 @@
+body { 
+  margin:0;
+  padding:0;
+}
+
+#map {
+  position: relative;
+  margin: 40px auto;
+  width: 650px;
+  height: 600px;
+}
+
+#menu {
+	position: absolute;
+	background: #fff;
+	padding: 10px;
+  top: 20px;
+  right: 20px;
+  height: 80px;
+  width: 80px;
+	font-family: 'Open Sans', sans-serif;
+  z-index: 20;
+}
+
+.toggle-floor {
+  margin: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
