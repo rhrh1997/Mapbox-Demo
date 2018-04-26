@@ -20,8 +20,6 @@ body {
   min-height: 40px;
   width: 80px;
 	font-family: 'Open Sans', sans-serif;
-  border-radius: 3px;
-  border: 0.5px solid rgba(0,0,0,0.4);
   z-index: 20;
 }
 
@@ -31,15 +29,16 @@ body {
   text-align: center;
   cursor: pointer;
   height: 30px;
-  border-bottom: 0.5px solid rgba(0,0,0,0.4);
+  border: 0.5px solid rgba(0,0,0,0.4);
 }
 
 .button-first {
+  border-top: 0.5px solid rgba(0,0,0,0.4);
   border-radius: 3px 3px 0 0;
 }
 
 .button-last {
-  border-bottom: none;
+  border-bottom: 0.5px solid rgba(0,0,0,0.4);
   border-radius: 0 0 3px 3px;
 }
 
