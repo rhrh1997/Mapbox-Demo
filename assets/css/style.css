@@ -10,22 +10,39 @@ body {
   height: 600px;
 }
 
-#menu {
+#floorMenu {
 	position: absolute;
 	background: #fff;
-	padding: 10px;
+  margin: 0;
+  padding: 0;
   top: 20px;
   right: 20px;
-  height: 80px;
+  min-height: 40px;
   width: 80px;
 	font-family: 'Open Sans', sans-serif;
+  border-radius: 3px;
+  border: 0.5px solid rgba(0,0,0,0.4);
+  border-bottom: none;
   z-index: 20;
 }
 
 .toggle-floor {
-  margin: 4px;
+  padding: 5px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.4);
+  line-height: 30px;
   text-align: center;
   cursor: pointer;
+  height: 30px;
+}
+
+.toggle-floor:hover:not(.active-button) {
+  background-color: #f8f8f8;
+  color: #404040;
+}
+
+.active-button {
+  background-color: #4283f4;
+  color: white;
 }
 
 .mapboxgl-popup {
