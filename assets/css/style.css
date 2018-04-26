@@ -22,17 +22,25 @@ body {
 	font-family: 'Open Sans', sans-serif;
   border-radius: 3px;
   border: 0.5px solid rgba(0,0,0,0.4);
-  border-bottom: none;
   z-index: 20;
 }
 
 .toggle-floor {
   padding: 5px;
-  border-bottom: 0.5px solid rgba(0,0,0,0.4);
   line-height: 30px;
   text-align: center;
   cursor: pointer;
   height: 30px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.4);
+}
+
+.button-first {
+  border-radius: 3px 3px 0 0;
+}
+
+.button-last {
+  border-bottom: none;
+  border-radius: 0 0 3px 3px;
 }
 
 .toggle-floor:hover:not(.active-button) {
