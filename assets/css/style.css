@@ -1,12 +1,27 @@
+:root {
+  --mdc-theme-primary: #fafbfd;
+  --mdc-theme-secondary: #fafbfd;
+  --mdc-theme-on-primary: #4494ed;
+  --mdc-theme-on-secondary: #fff;
+  --mdc-theme-background: #fff;
+}
+
 body { 
   margin:0;
   padding:0;
 }
 
+html {
+  height: 100%;
+}
+
+header {
+  z-index: 25;
+}
+
 #map {
-  position: relative;
-  margin: 40px auto;
-  width: 650px;
+/*  position: relative;
+  width: 100%;*/
   height: 600px;
 }
 
@@ -21,6 +36,7 @@ body {
   width: 80px;
 	font-family: 'Open Sans', sans-serif;
   z-index: 20;
+  border-radius: 3px;
 }
 
 .toggle-floor {
@@ -55,4 +71,33 @@ body {
 .mapboxgl-popup {
   max-width: 400px;
   font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+/* Place drawer and content side by side. */
+.demo-body {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+/* Stack toolbar and main on top of each other. */
+.demo-content {
+  display: inline-flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.demo-main {
+  margin-top: 50px;
+
+}
+
+#asideMenu {
+  z-index: 25;
 }

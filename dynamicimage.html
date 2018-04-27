@@ -2,23 +2,67 @@
 <html>
 <head>
   <title>Dynamic Image Overlay Mapbox Demo</title>
+  <!-- MapBox -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css" rel="stylesheet" />
-  <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.js'></script>
-  <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css' type='text/css' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css" type="text/css" />
+  <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="assets/javascript/script.js"></script>
+  <!-- Pub Nub -->
+  <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.min.js"></script>
+  <!-- Material Design -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="node_modules/material-components-web/dist/material-components-web.css">
+  <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
+  <script>mdc.autoInit()</script>
+  <!-- Custom scripts -->
+  <script src="assets/javascript/materialscript.js"></script>
+  <script src="assets/javascript/mapscript.js"></script>
+  <!-- Custom style -->
   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
-<body>
 
-  <div id="map">
-  	
-  	<div id="floorMenu">
-  		<div data-num=1 class="toggle-floor button-first" data-url="https://krieg2.github.io/Mapbox-Demo/assets/images/TCH_AreaMap.gif">Floor 1</div>
-  		<div data-num=2 class="toggle-floor" data-url="">Floor 2</div>
-  		<div data-num=3 class="toggle-floor button-last" data-url="">Floor 3</div>
-  	</div>
+<body class="mdc-typography demo-body">
+  <aside id="asideMenu" class="mdc-drawer mdc-drawer--persistent mdc-typography mdc-elevation--z14">
+    <nav class="mdc-drawer__drawer">
+      <header class="mdc-drawer__header">
+        <div class="mdc-drawer__header-content">
+          Menu
+        </div>
+      </header>
+      <nav id="icon-with-text-demo" class="mdc-drawer__content mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="#">Map Settings</a>
+        <a class="mdc-list-item" href="#">Display Settings</a>
+        <a class="mdc-list-item" href="#">Live Updates</a>
+        <a class="mdc-list-item" href="#">Heatmap</a>
+        <a class="mdc-list-item" href="#">Outdoor Maps</a>
+      </nav>
+    </nav>
+  </aside>
+
+  <div class="demo-content">
+
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+          <a href="#" id="menuBtn" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+          <span class="mdc-top-app-bar__title">Title</span>
+        </section>
+      </div>
+    </header>
+
+    <main class="demo-main">
+      
+      <div id="map" >
+        <div id="floorMenu">
+          <div data-num=1 class="toggle-floor button-first" data-url="https://krieg2.github.io/Mapbox-Demo/assets/images/TCH_AreaMap.gif">Floor 1</div>
+          <div data-num=2 class="toggle-floor" data-url="">Floor 2</div>
+          <div data-num=3 class="toggle-floor button-last" data-url="">Floor 3</div>
+        </div>
+       </div>
+
+    </main>
   </div>
   
 </body>
