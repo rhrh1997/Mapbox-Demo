@@ -7,15 +7,18 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.js"></script>
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.4/mapbox-gl-draw.css" type="text/css" />
+
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
   <!-- Pub Nub -->
   <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.2.min.js"></script>
-  <!-- Material Design -->
+
+  <!-- Materialize -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="node_modules/material-components-web/dist/material-components-web.css">
-  <script src="node_modules/material-components-web/dist/material-components-web.js"></script>
-  <script>mdc.autoInit()</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
   <!-- Custom scripts -->
   <script src="assets/javascript/materialscript.js"></script>
   <script src="assets/javascript/mapscript.js"></script>
@@ -23,47 +26,189 @@
   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 </head>
 
-<body class="mdc-typography demo-body">
-  <aside id="asideMenu" class="mdc-drawer mdc-drawer--persistent mdc-typography mdc-elevation--z14">
-    <nav class="mdc-drawer__drawer">
-      <header class="mdc-drawer__header">
-        <div class="mdc-drawer__header-content">
-          Menu
-        </div>
-      </header>
-      <nav id="icon-with-text-demo" class="mdc-drawer__content mdc-list">
-        <a class="mdc-list-item mdc-list-item--activated" href="#">Map Settings</a>
-        <a class="mdc-list-item" href="#">Display Settings</a>
-        <a class="mdc-list-item" href="#">Live Updates</a>
-        <a class="mdc-list-item" href="#">Heatmap</a>
-        <a class="mdc-list-item" href="#">Outdoor Maps</a>
-      </nav>
-    </nav>
+<body>
+
+  <aside id="left-sidebar-nav" class="grey lighten-5 center-align">
+    <img id="logoImg" src="assets/images/logo.jpeg"/>
+    <ul>
+      <li><a href="#"><i class="material-icons md-36">home</i></a></li>
+      <li class="active-item"><a href="#"><i class="material-icons md-36">layers</i></a></li>
+      <li><a href="#"><i class="material-icons md-36">person_outline</i></a></li>
+      <li><a href="#"><i class="material-icons md-36">insert_drive_file</i></a></li>
+      <li><a href="#"><i class="material-icons md-36">supervisor_account</i></a></li>
+      <li><a href="#"><i class="material-icons md-36">settings</i></a></li>
+    </ul>
   </aside>
 
-  <div class="demo-content">
+  <header>
+    <div class="navbar-fixed">
+    <nav class="grey lighten-5">
+      <div class="nav-wrapper">
 
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
-      <div class="mdc-top-app-bar__row">
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-          <a href="#" id="menuBtn" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
-          <span class="mdc-top-app-bar__title">Title</span>
-        </section>
+        <ul class="left">
+          <li><a href="#" id="toggleMenu" class="waves-effect waves-teal btn-flat blue-text">
+            <i class="material-icons">menu</i>
+          </a></li>
+          <li>
+            <div class="input-field">
+              <input id="searchText" type="text" class="validate">
+            </div>
+          </li>
+          <li>
+            <i class="material-icons blue-text">search</i>
+          </li>
+        </ul>
+
+        <ul class="right">
+          <li><i class="material-icons md-36 transparent grey-text">account_circle</i></li>
+          <!-- Dropdown Trigger -->
+          <li><a class="waves-effect waves-teal btn-flat dropdown-trigger grey-text" href="#" data-target="topDropdown"><i class="material-icons md-16">arrow_drop_down_circle</i></a></li>
+        </ul>
+
+        <!-- Dropdown Structure -->
+        <ul id="topDropdown" class="dropdown-content">
+          <li><a href="#!" class="blue-text">Profile</a></li>
+          <li><a href="#!" class="blue-text">Logout</a></li>
+          <li class="divider" tabindex="-1"></li>
+          <li><a href="#!" class="blue-text"><i class="material-icons">view_module</i>Charts</a></li>
+          <li><a href="#!" class="blue-text"><i class="material-icons">cloud</i>Data</a></li>
+        </ul>
+
       </div>
-    </header>
+    </nav>
+    </div>
+  </header>
 
-    <main class="demo-main">
-      
-      <div id="map" >
-        <div id="floorMenu">
-          <div data-num=1 class="toggle-floor button-first" data-url="https://krieg2.github.io/Mapbox-Demo/assets/images/TCH_AreaMap.gif">Floor 1</div>
-          <div data-num=2 class="toggle-floor" data-url="">Floor 2</div>
-          <div data-num=3 class="toggle-floor button-last" data-url="">Floor 3</div>
+  <div id="menu">
+
+    <div id="mainMenu">
+
+      <h4>Menu</h4>
+
+      <div class="row">
+        <div class="input-field">
+          <select multiple>
+            <option value="" disabled selected>MAP SETTINGS</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
         </div>
-       </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <select>
+            <option value="" disabled selected>DISPLAY SETTINGS</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <label>Live Updates</label>
+        </div>
+        <div class="col s6">
+          <div class="switch row">
+            <label>
+              Off
+              <input id="liveUpdates" type="checkbox">
+              <span class="lever"></span>
+              On
+            </label>
+          </div>
+        </div>
+        <div class="col s12">
+            <label>Turn on to see live position changes.</label>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <label>Heatmap</label>
+        </div>
+        <div class="col s6">
+          <div class="switch row">
+            <label>
+              Off
+              <input type="checkbox">
+              <span class="lever"></span>
+              On
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6">
+          <label>Outdoor Maps</label>
+        </div>
+        <div class="col s6">
+          <div class="switch row">
+            <label>
+              Off
+              <input id="outdoorMaps" type="checkbox">
+              <span class="lever"></span>
+              On
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <select id="displayedTags" multiple>
+            <option value="" disabled selected>DISPLAYED TAGS</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <a class="blue waves-effect waves-light btn-small"><i class="material-icons left">add</i>Add Tags</a>
+      </div>
 
-    </main>
+    </div>
+
+    <div id="deviceMenu" hidden>
+
+      <div class="row">
+        <div class="input-field">
+          <select multiple>
+            <option value="" disabled selected>TAG SETTINGS</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <select>
+            <option value="" disabled selected>TAG DATA</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <label>Current Status:</label>
+        <span class="badge yellow">In-use</span>
+      </div>
+    </div>
   </div>
-  
+
+  <div id="map">
+    <div id="floorMenu">
+      <div data-num=1 class="toggle-floor button-first" data-url="https://krieg2.github.io/Mapbox-Demo/assets/images/UTC_1st_Floor.gif">Floor 1</div>
+      <div data-num=2 class="toggle-floor" data-url="">Floor 2</div>
+      <div data-num=2 class="toggle-floor" data-url="">Floor 3</div>
+      <div data-num=3 class="toggle-floor button-last" data-url="https://krieg2.github.io/Mapbox-Demo/assets/images/UTC_4th_Floor.gif">Floor 4</div>
+    </div>
+  </div>
+        
 </body>
+
 </html>
