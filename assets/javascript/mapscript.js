@@ -21,6 +21,7 @@ $(document).ready(function() {
   var monitorTags = {};
   var pubnubChannels = ["demo_channel"];
   var uRL = "";
+  var floorNum = 0;
 
   pubnub.addListener({
     message: function(m) {
@@ -124,32 +125,37 @@ $(document).ready(function() {
 
     if(e.features.length > 0) {
 
-      var id = e.features[0].id;
+      //var id = e.features[0].id;
       var coords = e.features[0].geometry.coordinates[0];
-      map.addSource("polygon-source_"+id, {
-        "type": "image",
-        "url": uRL,
-        "coordinates": [coords[0], coords[1], coords[2], coords[3]]
-      });
 
-      // Insert the polygon layer beneath any tag layer.
-      var layers = map.getStyle().layers;
-
-      var labelLayerId;
-      for(var i=0; i < layers.length; i++){
-          if(layers[i].type === "symbol" &&
-             layers[i].id.slice(0, 10) === "tag-layer_"){
-
-              labelLayerId = layers[i].id;
-              break;
-          }
+      if(map.getSource("polygon-source_"+floorNum) === undefined){
+        map.addSource("polygon-source_"+floorNum, {
+          "type": "image",
+          "url": uRL,
+          "coordinates": [coords[0], coords[1], coords[2], coords[3]]
+        });
       }
 
-      map.addLayer({
-        "id": "polygon-layer_"+id,
-        "type": "raster",
-        "source": "polygon-source_"+id
-      }, labelLayerId);
+      if(map.getLayer("polygon-layer_"+floorNum) === undefined){
+        // Insert the polygon layer beneath any tag layer.
+        var layers = map.getStyle().layers;
+
+        var labelLayerId;
+        for(var i=0; i < layers.length; i++){
+            if(layers[i].type === "symbol" &&
+               layers[i].id.slice(0, 10) === "tag-layer_"){
+
+                labelLayerId = layers[i].id;
+                break;
+            }
+        }
+
+        map.addLayer({
+          "id": "polygon-layer_"+floorNum,
+          "type": "raster",
+          "source": "polygon-source_"+floorNum
+        }, labelLayerId);
+      }
     }
   }
 
@@ -178,14 +184,10 @@ $(document).ready(function() {
 
   function restoreGlobalMap(){
 
-    //console.log(globalSources);
-    //console.log(globalLayers);
     Object.keys(globalSources).forEach(function(key){
-      //console.log(globalSources[i]);
       map.addSource(key, globalSources[key]);
     });
     for(var i = 0; i < globalLayers.length; i++){
-      //console.log(globalLayers[i]);
       map.addLayer(globalLayers[i]);
     }
   }
@@ -232,12 +234,28 @@ $(document).ready(function() {
   // Handle floor button clicks.
   $("#floorMenu").on("click", ".toggle-floor", function(event){
 
-    //var dataNum = $(this).data("num");
+    var dataNum = $(this).data("num");
     $("#floorMenu").find(".toggle-floor").removeClass("active-button");
     
     uRL = $(this).data("url");
+    floorNum = $(this).data("num");
     $(this).addClass("active-button");
 
+    var floorsArr = $("#floorMenu").find(".toggle-floor");
+
+    for(var i=0; i < floorsArr.length; i++){
+      var otherNum = $(floorsArr[i]).data("num");
+
+      if(otherNum !== dataNum){
+        if(map.getLayer("polygon-layer_"+otherNum) !== undefined){
+          map.setLayoutProperty("polygon-layer_"+otherNum, "visibility", "none");
+        }
+      } else if(otherNum === dataNum){
+        if(map.getLayer("polygon-layer_"+dataNum)){
+          map.setLayoutProperty("polygon-layer_"+dataNum, "visibility", "visible");
+        }
+      }
+    }
   });
 
   $("#displayedTags").on("change", function(event){
