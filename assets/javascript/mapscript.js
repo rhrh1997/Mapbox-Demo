@@ -33,7 +33,7 @@ $(document).ready(function() {
         if(msg.id){
           var id = parseInt(msg.id);
           if(msg.x && msg.y && monitorTags[id]){
-            updateMapSource(id, [msg.x.toFixed(6), msg.y.toFixed(6)])
+            updateTagSource(id, [msg.x.toFixed(6), msg.y.toFixed(6)])
           }
         }
     },
@@ -56,43 +56,10 @@ $(document).ready(function() {
     }
   });
 
-  map.on("load", function () {
-    // Insert the buildings layer beneath any symbol layer.
-    var layers = map.getStyle().layers;
+  map.on("load", function (){
 
-    var labelLayerId;
-    for(var i = 0; i < layers.length; i++){
-        if(layers[i].type === "symbol" && layers[i].layout["text-field"]){
-            labelLayerId = layers[i].id;
-            break;
-        }
-    }
-
-    map.addLayer({
-        "id": "3d-buildings",
-        "source": "composite",
-        "source-layer": "building",
-        "filter": ["==", "extrude", "true"],
-        "type": "fill-extrusion",
-        "minzoom": 15,
-        "paint": {
-            "fill-extrusion-color": "#aaa",
-
-            // use an "interpolate" expression to add a smooth transition effect to the
-            // buildings as the user zooms in
-            "fill-extrusion-height": [
-                "interpolate", ["linear"], ["zoom"],
-                15, 0,
-                15.05, ["get", "height"]
-            ],
-            "fill-extrusion-base": [
-                "interpolate", ["linear"], ["zoom"],
-                15, 0,
-                15.05, ["get", "min_height"]
-            ],
-            "fill-extrusion-opacity": .6
-        }
-      }, labelLayerId);
+    // Add 3d buildings layer.
+    add3dBuildings();
   });
 
   // Add draw controls to the map.
@@ -129,66 +96,83 @@ $(document).ready(function() {
 
   function updateArea(e){
 
-    console.log("update");
-    console.log(e);
     if(e.features.length > 0) {
 
       var id = e.features[0].id;
       var coords = e.features[0].geometry.coordinates[0];
-      map.getSource("source_"+id).setCoordinates([coords[0], coords[1], coords[2], coords[3]]);
+      map.getSource("polygon-source_"+id)
+      .setCoordinates([coords[0], coords[1], coords[2], coords[3]]);
     }
   }
 
   function deleteArea(e){
 
-    console.log("delete");
-    console.log(e);
     for(var i=0; i < e.features.length; i++){
       var id = e.features[i].id;
-      map.removeLayer("layer_"+id);
-      map.removeSource("source_"+id);
+      map.removeLayer("polygon-layer_"+id);
+      map.removeSource("polygon-source_"+id);
     }
   }
 
   function createArea(e){
 
-    console.log("create");
-    console.log(e);
     if(e.features.length > 0) {
 
       var id = e.features[0].id;
       var coords = e.features[0].geometry.coordinates[0];
-      map.addSource("source_"+id, {
+      map.addSource("polygon-source_"+id, {
         "type": "image",
         "url": uRL,
         "coordinates": [coords[0], coords[1], coords[2], coords[3]]
       });
+
+      // Insert the polygon layer beneath any tag layer.
+      var layers = map.getStyle().layers;
+
+      var labelLayerId;
+      for(var i=0; i < layers.length; i++){
+          if(layers[i].type === "symbol" &&
+             layers[i].id.slice(0, 9) === "tag-layer_"){
+
+              labelLayerId = layers[i].id;
+              break;
+          }
+      }
+
       map.addLayer({
-        "id": "layer_"+id,
+        "id": "polygon-layer_"+id,
         "type": "raster",
-        "source": "source_"+id
-      });
+        "source": "polygon-source_"+id
+      }, labelLayerId);
     }
   }
 
   // We must store the layers and sources in case style is changed.
   // (Style changes erase all layers and sources.)
   function storeGlobalMap(){
-    //if(map.getStyle().layers !== undefined){
-      console.log(map.getStyle());
-    //  globalLayers = map.getStyle().layers;
-    //}
-    //globalSources = map.getStyle().sources;
+
+      //console.log(map.getStyle());
+      globalLayers = map.getStyle().layers.filter(function(item){
+        return (item.id.slice(0, 14) === "polygon-layer_" ||
+                item.id.slice(0, 9) === "tag-layer_" ||
+                item.id === "3d-buildings");
+      });
+
+      globalSources = map.getStyle().sources.filter(function(item){
+        return (item.id.slice(0, 15) === "polygon-source_" ||
+                item.id.slice(0, 11) === "tag-source_");
+      });
   }
 
   function restoreGlobalMap(){
+
     for(var i = 0; i < globalSources.length; i++){
-      console.log(globalSources[i]);
-      //map.addSource(globalSources[i].id, globalSources[i].data);
+      //console.log(globalSources[i]);
+      map.addSource(globalSources[i]);
     }
     for(var i = 0; i < globalLayers.length; i++){
-      console.log(globalLayers[i]);
-      //map.addLayer(globalLayers[i].id, globalLayers[i].data);
+      //console.log(globalLayers[i]);
+      map.addLayer(globalLayers[i]);
     }
   }
 
@@ -217,6 +201,7 @@ $(document).ready(function() {
       map.setStyle("mapbox://styles/mapbox/streets-v10");
     }
     restoreGlobalMap();
+    add3dBuildings();
   });
 
   $("#liveUpdates").on("click", function(event){
@@ -252,13 +237,13 @@ $(document).ready(function() {
       for(var i=0; i < tagsArr.length; i++){
         if(monitorTags[tagsArr[i]] === undefined){
           monitorTags[tagsArr[i]] = {};
-          addMapSource(tagsArr[i]);
+          addTagSource(tagsArr[i]);
         }
       }
       Object.keys(monitorTags).forEach(function(key){
         if(tagsArr.indexOf(key) < 0){
           monitorTags[key] = undefined;
-          removeMapSource(key);
+          removeTagSource(key);
         }
       });
     } else{
@@ -266,7 +251,7 @@ $(document).ready(function() {
     }
   });
 
-  function addMapSource(num){
+  function addTagSource(num){
 
     var geoJson = {
         "type": "Feature",
@@ -278,18 +263,18 @@ $(document).ready(function() {
           "title": "Tag "+num
         }
     };
-    map.addSource("tagsource_"+num, { type: "geojson", data: geoJson });
+    map.addSource("tag-source_"+num, { type: "geojson", data: geoJson });
     map.addLayer({
-        "id": "taglayer_"+num,
+        "id": "tag-layer_"+num,
         "type": "symbol",
-        "source": "tagsource_"+num,
+        "source": "tag-source_"+num,
         "layout": {
             "icon-image": "circle-15"
         }
     });
   }
 
-  function updateMapSource(num, coords){
+  function updateTagSource(num, coords){
 
     var geoJson = {
         "type": "Feature",
@@ -301,19 +286,59 @@ $(document).ready(function() {
           "title": "Tag "+num
         }
     };
-    if(map.getSource("tagsource_"+num)){
-      map.getSource("tagsource_"+num).setData(geoJson);
+    if(map.getSource("tag-source_"+num)){
+      map.getSource("tag-source_"+num).setData(geoJson);
     }
   }
 
-  function removeMapSource(num){
+  function removeTagSource(num){
 
-    if(map.getLayer("taglayer_"+num)){
-      map.removeLayer("taglayer_"+num);
+    if(map.getLayer("tag-layer_"+num)){
+      map.removeLayer("tag-layer_"+num);
     }
-    if(map.getSource("tagsource_"+num)){
-      map.removeSource("tagsource_"+num);    
+    if(map.getSource("tag-source_"+num)){
+      map.removeSource("tag-source_"+num);    
     }
+  }
+
+  function add3dBuildings(){
+
+    // Insert the buildings layer beneath any symbol layer.
+    var layers = map.getStyle().layers;
+
+    var labelLayerId;
+    for(var i=0; i < layers.length; i++){
+        if(layers[i].type === "symbol" && layers[i].layout["text-field"]){
+            labelLayerId = layers[i].id;
+            break;
+        }
+    }
+
+    map.addLayer({
+        "id": "3d-buildings",
+        "source": "composite",
+        "source-layer": "building",
+        "filter": ["==", "extrude", "true"],
+        "type": "fill-extrusion",
+        "minzoom": 15,
+        "paint": {
+            "fill-extrusion-color": "#aaa",
+
+            // use an "interpolate" expression to add a smooth transition effect to the
+            // buildings as the user zooms in
+            "fill-extrusion-height": [
+                "interpolate", ["linear"], ["zoom"],
+                15, 0,
+                15.05, ["get", "height"]
+            ],
+            "fill-extrusion-base": [
+                "interpolate", ["linear"], ["zoom"],
+                15, 0,
+                15.05, ["get", "min_height"]
+            ],
+            "fill-extrusion-opacity": .6
+        }
+    }, labelLayerId);
   }
 
 });
