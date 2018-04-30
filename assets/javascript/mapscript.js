@@ -59,7 +59,13 @@ $(document).ready(function() {
   map.on("load", function (){
 
     // Add 3d buildings layer.
-    add3dBuildings();
+    //add3dBuildings();
+  });
+
+  map.on("styledata", function (){
+
+    // Add back custom layers.
+    restoreGlobalMap();
   });
 
   // Add draw controls to the map.
@@ -132,7 +138,7 @@ $(document).ready(function() {
       var labelLayerId;
       for(var i=0; i < layers.length; i++){
           if(layers[i].type === "symbol" &&
-             layers[i].id.slice(0, 9) === "tag-layer_"){
+             layers[i].id.slice(0, 10) === "tag-layer_"){
 
               labelLayerId = layers[i].id;
               break;
@@ -151,25 +157,33 @@ $(document).ready(function() {
   // (Style changes erase all layers and sources.)
   function storeGlobalMap(){
 
-      //console.log(map.getStyle());
-      globalLayers = map.getStyle().layers.filter(function(item){
+      var mapStyle = map.getStyle();
+      //console.log(mapStyle);
+      globalLayers = mapStyle.layers.filter(function(item){
         return (item.id.slice(0, 14) === "polygon-layer_" ||
-                item.id.slice(0, 9) === "tag-layer_" ||
+                item.id.slice(0, 10) === "tag-layer_" ||
                 item.id === "3d-buildings");
       });
 
-      globalSources = map.getStyle().sources.filter(function(item){
-        return (item.id.slice(0, 15) === "polygon-source_" ||
-                item.id.slice(0, 11) === "tag-source_");
+      var temp = {};
+      Object.keys(mapStyle.sources).forEach(function(key){
+        if(key.slice(0, 15) === "polygon-source_" ||
+           key.slice(0, 11) === "tag-source_"){
+
+          temp[key] = mapStyle.sources[key];
+        }
       });
+      globalSources = temp;
   }
 
   function restoreGlobalMap(){
 
-    for(var i = 0; i < globalSources.length; i++){
+    //console.log(globalSources);
+    //console.log(globalLayers);
+    Object.keys(globalSources).forEach(function(key){
       //console.log(globalSources[i]);
-      map.addSource(globalSources[i]);
-    }
+      map.addSource(key, globalSources[key]);
+    });
     for(var i = 0; i < globalLayers.length; i++){
       //console.log(globalLayers[i]);
       map.addLayer(globalLayers[i]);
@@ -200,8 +214,6 @@ $(document).ready(function() {
     } else{
       map.setStyle("mapbox://styles/mapbox/streets-v10");
     }
-    restoreGlobalMap();
-    add3dBuildings();
   });
 
   $("#liveUpdates").on("click", function(event){
