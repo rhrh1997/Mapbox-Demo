@@ -105,20 +105,20 @@ $(document).ready(function() {
 
     if(e.features.length > 0) {
 
-      var id = e.features[0].id;
+      //var id = e.features[0].id;
       var coords = e.features[0].geometry.coordinates[0];
-      map.getSource("polygon-source_"+id)
+      map.getSource("polygon-source_"+floorNum)
       .setCoordinates([coords[0], coords[1], coords[2], coords[3]]);
     }
   }
 
   function deleteArea(e){
 
-    for(var i=0; i < e.features.length; i++){
-      var id = e.features[i].id;
-      map.removeLayer("polygon-layer_"+id);
-      map.removeSource("polygon-source_"+id);
-    }
+    //for(var i=0; i < e.features.length; i++){
+      //var id = e.features[i].id;
+      map.removeLayer("polygon-layer_"+floorNum);
+      map.removeSource("polygon-source_"+floorNum);
+    //}
   }
 
   function createArea(e){
