@@ -296,10 +296,21 @@ $(document).ready(function() {
     map.addSource("tag-source_"+num, { type: "geojson", data: geoJson });
     map.addLayer({
         "id": "tag-layer_"+num,
-        "type": "symbol",
+        "type": "circle",
         "source": "tag-source_"+num,
-        "layout": {
-            "icon-image": "circle-15"
+        "paint": {
+          "circle-radius": 8,
+          "circle-color": {
+            "property": "title",
+            "type": "categorical",
+            "stops": [
+                ["Tag 1", "#fbb03b"],
+                ["Tag 2", "#223b53"],
+                ["Tag 3", "#e55e5e"],
+                ["Tag 4", "#59d132"],
+                ["Tag 5", "#9132d1"]
+            ]
+          }
         }
     });
   }
