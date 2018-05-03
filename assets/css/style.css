@@ -12,13 +12,17 @@ header {
   z-index: 25;
 }
 
+h4 {
+    font-family: Barlow-Light
+}
+
 #map {
   z-index: 24 !important;
   position: absolute;
   top: 60px;
   left: 100px;
   width: calc(100% - 100px);
-  height: 600px;
+  height: 93%;
 }
 
 #floorMenu {
@@ -79,10 +83,10 @@ header {
 }
 
 #logoImg {
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 50px;
-  width: 50px;
-  height: 50px;
+  width: 36.235px;
+  height: 34px;
 }
 
 #left-sidebar-nav {
@@ -94,6 +98,7 @@ header {
 }
 
 #menu {
+  font-family: 'Barlow', sans-serif;
   background-color: white;
   position: relative;
   height: 100vh;
@@ -115,6 +120,17 @@ header {
 .active-item {
   border-left: 4px solid #2196F3;
   margin-left: 11px !important;
+}
+
+.input-field-select {
+   font-size: 10px;
+      color: #2196F3;
+
+}
+
+input:not([type]), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.materialize-textarea {
+  font-family: 'Barlow', sans-serif;
+   color: lightgrey
 }
 
 .dropdown-content li>a, .dropdown-content li>span {
@@ -156,7 +172,8 @@ input[type="checkbox"]:checked+span:not(.lever):before{
   width: 24px !important;
 }
 .material-icons.md-36 {
-  font-size: 36px !important;
+    padding-top: 10px;
+  font-size: 25px !important;
   height: 36px !important;
   width: 36px !important;
 }
